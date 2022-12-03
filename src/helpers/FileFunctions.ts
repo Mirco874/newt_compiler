@@ -1,0 +1,19 @@
+import * as fs from 'fs';
+export class FileFunctions{
+
+    checkIfFolderExist(directoryName:string):boolean{
+        return fs.existsSync(directoryName);
+      }
+
+    CreateDirectory(directoryName:string):void{
+        fs.mkdirSync(directoryName,{recursive:true}); 
+    }
+
+    WriteFile(fileDirectory:string,content:string,directoryName:string):void{
+        if(!this.checkIfFolderExist(directoryName)){
+            this.CreateDirectory(directoryName);
+        }
+        fs.writeFile(fileDirectory, content, (err) => {if (err) throw err;}); 
+    }
+
+}
