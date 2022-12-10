@@ -1,7 +1,7 @@
 import { Injectable} from '@nestjs/common';
 import { v4 } from 'uuid';
 import {FileFunctions} from "./helpers/FileFunctions";
-import * as child_process from 'child_process'; 
+import { ShellFunctions } from './helpers/ShellFunctions';
 
 @Injectable()
 export class AppService {
@@ -12,27 +12,22 @@ export class AppService {
 
 @Injectable()
 export class CompilerService {
-  compileWithJava(className,code){
+  compileWithJava(className,code):void{
     const extention='java'
     const resultsFolder=`./compilerResults/java/${v4()}`;
     const javaFileDirectory=`${resultsFolder}/${className}.${extention}`;
-    const command=`(javac ${javaFileDirectory}) -and (java -cp ${resultsFolder} ${className})`;
-    console.log(command)
-    const fileFuntcions=new FileFunctions();
+    const command=`javac ${javaFileDirectory} && java -cp ${resultsFolder} ${className}`;
 
-    fileFuntcions.WriteFile(javaFileDirectory,code,resultsFolder);
+    const shellFunctions= new ShellFunctions();
+    const fileFunctions=new FileFunctions();
+    fileFunctions.CreateFile(javaFileDirectory,code,resultsFolder).then((res)=>{
+      shellFunctions.excecuteCommand(command);
+    })
 
-    child_process.exec("javac ./compilerResults/java/ad8f21fc-a4c6-4eba-801d-aaaa1b722975/Hello.java", async (err, stdout) => {
-                                                  if (err) {return;}
-                                                  await console.log(stdout)
-                                                  return(stdout);}
-    );
 
   }
 
 }
-
-
 
 
 

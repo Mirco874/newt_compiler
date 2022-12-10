@@ -16,4 +16,21 @@ export class FileFunctions{
         fs.writeFile(fileDirectory, content, (err) => {if (err) throw err;}); 
     }
 
+    
+    CreateFile(fileDirectory:string,content:string,directoryName:string):Promise<string>{
+
+        const createFile= new Promise<string>((resolve, reject) => {
+            if(!fs.existsSync(directoryName))
+              { fs.mkdirSync(directoryName,{recursive:true});}
+      
+            fs.writeFile(fileDirectory, content, (err) => 
+                {if (err) reject(err) }); 
+            resolve("created")
+          })
+          
+        return createFile;
+    }
+
+
+    
 }
